@@ -1,8 +1,8 @@
-import logo from "@/assets/logo.png";
-import { ModeToggle } from "@/components/mode-toggle";
-import Image from "next/image";
-import Link from "next/link";
-import { SignOutButton } from "./sign-out-button";
+import logo from '@/assets/logo.png'
+import { ModeToggle } from '@/components/mode-toggle'
+import Image from 'next/image'
+import Link from 'next/link'
+import { SignOutButton } from './sign-out-button'
 
 export function Navbar() {
   return (
@@ -12,13 +12,7 @@ export function Navbar() {
           href="/notes"
           className="flex items-center gap-3 text-xl font-semibold text-card-foreground hover:opacity-80 transition-opacity"
         >
-          <Image
-            src={logo}
-            alt="Smart Notes Logo"
-            width={32}
-            height={32}
-            className="rounded"
-          />
+          <Image src={logo} alt="Smart Notes Logo" width={32} height={32} className="rounded" />
           Smart Notes
         </Link>
         <div className="flex items-center gap-2">
@@ -27,5 +21,5 @@ export function Navbar() {
         </div>
       </div>
     </nav>
-  );
+  )
 }

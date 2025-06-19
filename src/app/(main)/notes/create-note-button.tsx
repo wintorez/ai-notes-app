@@ -1,42 +1,35 @@
-"use client";
+'use client'
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button'
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Plus } from "lucide-react";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Plus } from 'lucide-react'
 
 const noteFormSchema = z.object({
   title: z.string().min(1, {
-    message: "Title cannot be empty.",
+    message: 'Title cannot be empty.',
   }),
   body: z.string().min(1, {
-    message: "Body cannot be empty.",
+    message: 'Body cannot be empty.',
   }),
-});
+})
 
 export function CreateNoteButton() {
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false)
 
   return (
     <>
@@ -46,22 +39,22 @@ export function CreateNoteButton() {
       </Button>
       <CreateNoteDialog open={dialogOpen} onOpenChange={setDialogOpen} />
     </>
-  );
+  )
 }
 
 interface CreateNoteDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
 function CreateNoteDialog({ open, onOpenChange }: CreateNoteDialogProps) {
   const form = useForm<z.infer<typeof noteFormSchema>>({
     resolver: zodResolver(noteFormSchema),
     defaultValues: {
-      title: "",
-      body: "",
+      title: '',
+      body: '',
     },
-  });
+  })
 
   async function onSubmit(values: z.infer<typeof noteFormSchema>) {
     // TODO: Create note from form input
@@ -73,8 +66,7 @@ function CreateNoteDialog({ open, onOpenChange }: CreateNoteDialogProps) {
         <DialogHeader>
           <DialogTitle>Create New Note</DialogTitle>
           <DialogDescription>
-            Fill in the details for your new note. Click save when you&apos;re
-            done.
+            Fill in the details for your new note. Click save when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -112,5 +104,5 @@ function CreateNoteDialog({ open, onOpenChange }: CreateNoteDialogProps) {
         </Form>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

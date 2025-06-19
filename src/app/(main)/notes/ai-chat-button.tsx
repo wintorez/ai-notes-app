@@ -1,13 +1,13 @@
-"use client";
+'use client'
 
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
-import { Bot, Expand, Minimize, Send, Trash, X } from "lucide-react";
-import { useRef, useState } from "react";
+import { Button } from '@/components/ui/button'
+import { Textarea } from '@/components/ui/textarea'
+import { cn } from '@/lib/utils'
+import { Bot, Expand, Minimize, Send, Trash, X } from 'lucide-react'
+import { useRef, useState } from 'react'
 
 export function AIChatButton() {
-  const [chatOpen, setChatOpen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false)
 
   return (
     <>
@@ -17,28 +17,26 @@ export function AIChatButton() {
       </Button>
       <AIChatBox open={chatOpen} onClose={() => setChatOpen(false)} />
     </>
-  );
+  )
 }
 
 interface AIChatBoxProps {
-  open: boolean;
-  onClose: () => void;
+  open: boolean
+  onClose: () => void
 }
 
 function AIChatBox({ open, onClose }: AIChatBoxProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false)
 
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  if (!open) return null;
+  if (!open) return null
 
   return (
     <div
       className={cn(
-        "animate-in slide-in-from-bottom-10 bg-card fixed right-4 bottom-4 z-50 flex flex-col rounded-lg border shadow-lg duration-300 2xl:right-16",
-        isExpanded
-          ? "h-[650px] max-h-[90vh] w-[550px]"
-          : "h-[500px] max-h-[80vh] w-80 sm:w-96"
+        'animate-in slide-in-from-bottom-10 bg-card fixed right-4 bottom-4 z-50 flex flex-col rounded-lg border shadow-lg duration-300 2xl:right-16',
+        isExpanded ? 'h-[650px] max-h-[90vh] w-[550px]' : 'h-[500px] max-h-[80vh] w-80 sm:w-96',
       )}
     >
       <div className="bg-primary text-primary-foreground flex items-center justify-between rounded-t-lg border-b p-3">
@@ -52,7 +50,7 @@ function AIChatBox({ open, onClose }: AIChatBoxProps) {
             size="icon"
             onClick={() => setIsExpanded(!isExpanded)}
             className="text-primary-foreground hover:bg-primary/90 h-8 w-8"
-            title={isExpanded ? "Minimize" : "Expand"}
+            title={isExpanded ? 'Minimize' : 'Expand'}
           >
             {isExpanded ? <Minimize /> : <Expand />}
           </Button>
@@ -93,7 +91,7 @@ function AIChatBox({ open, onClose }: AIChatBoxProps) {
         </Button>
       </form>
     </div>
-  );
+  )
 }
 
 function Loader() {
@@ -103,5 +101,5 @@ function Loader() {
       <div className="bg-primary size-1.5 animate-pulse rounded-full delay-150" />
       <div className="bg-primary size-1.5 animate-pulse rounded-full delay-300" />
     </div>
-  );
+  )
 }

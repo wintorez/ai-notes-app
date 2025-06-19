@@ -1,9 +1,9 @@
-import { Skeleton } from "@/components/ui/skeleton";
-import { AIChatButton } from "./ai-chat-button";
-import { CreateNoteButton } from "./create-note-button";
+import { Skeleton } from '@/components/ui/skeleton'
+import { AIChatButton } from './ai-chat-button'
+import { CreateNoteButton } from './create-note-button'
 
 export function NotesPage() {
-  const notes: [] | undefined = [];
+  const notes: [] | undefined = []
 
   return (
     <div className="container xl:max-w-6xl mx-auto">
@@ -25,17 +25,15 @@ export function NotesPage() {
         </div>
       )}
     </div>
-  );
+  )
 }
 
 function EmptyView() {
   return (
     <div className="text-center py-10">
-      <p className="text-muted-foreground">
-        No notes yet. Create your first note!
-      </p>
+      <p className="text-muted-foreground">No notes yet. Create your first note!</p>
     </div>
-  );
+  )
 }
 function LoadingSkeleton() {
   return (
@@ -46,5 +44,5 @@ function LoadingSkeleton() {
         </div>
       ))}
     </div>
-  );
+  )
 }

@@ -1,14 +1,8 @@
-"use client";
+'use client'
 
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Trash2 } from "lucide-react";
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Trash2 } from 'lucide-react'
 
 export function NotePreviewDialog() {
   return (
@@ -26,5 +20,5 @@ export function NotePreviewDialog() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }
