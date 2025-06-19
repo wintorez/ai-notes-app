@@ -1,9 +1,15 @@
-import { defineSchema } from 'convex/server'
+import { defineSchema, defineTable } from 'convex/server'
 import { authTables } from '@convex-dev/auth/server'
+import { v } from 'convex/values'
 
 const schema = defineSchema({
   ...authTables,
-  // Other tables can be defined here
+
+  notes: defineTable({
+    title: v.string(),
+    body: v.string(),
+    userId: v.id('users'),
+  }).index('by_userId', ['userId']),
 })
 
 export default schema

@@ -12,8 +12,8 @@ export function Navbar() {
           href="/notes"
           className="flex items-center gap-3 text-xl font-semibold text-card-foreground hover:opacity-80 transition-opacity"
         >
-          <Image src={logo} alt="Smart Notes Logo" width={32} height={32} className="rounded" />
-          Smart Notes
+          <Image src={logo} alt="My Smart Notes Logo" width={32} height={32} className="rounded" />
+          My Smart Notes
         </Link>
         <div className="flex items-center gap-2">
           <ModeToggle />

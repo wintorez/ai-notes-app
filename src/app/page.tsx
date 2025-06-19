@@ -9,11 +9,11 @@ export default function Home() {
       <main className="max-w-4xl mx-auto text-center space-y-8">
         {/* Logo */}
         <div className="mb-8">
-          <Image src={logo} alt="Smart Notes Logo" width={120} height={120} className="mx-auto" priority />
+          <Image src={logo} alt="My Smart Notes Logo" width={120} height={120} className="mx-auto" priority />
         </div>
 
         {/* Title */}
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">Smart Notes</h1>
+        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">My Smart Notes</h1>
 
         {/* Description */}
         <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
