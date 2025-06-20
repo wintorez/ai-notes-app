@@ -31,7 +31,7 @@ export function NotePreviewDialog({ note }: NotePreviewDialogPros) {
       toast.success('Note deleted')
       handleClose()
     } catch (error) {
-      console.error('Failed to delete note', error)
+      console.error('Failed to delete note:', error)
       toast.error('Failed to delete note. Please try again.')
     } finally {
       setIsDeleting(false)

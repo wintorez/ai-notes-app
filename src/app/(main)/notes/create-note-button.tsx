@@ -70,7 +70,7 @@ function CreateNoteDialog({ open, onOpenChange }: CreateNoteDialogProps) {
       form.reset()
       onOpenChange(false)
     } catch (error) {
-      console.error('Error creating note', error)
+      console.error('Error creating note:', error)
       toast.error('Failed to create note. Please try again.')
     }
   }

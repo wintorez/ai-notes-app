@@ -3,8 +3,13 @@
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
+import { useAuthToken } from '@convex-dev/auth/react'
 import { Bot, Expand, Minimize, Send, Trash, X } from 'lucide-react'
 import { useRef, useState } from 'react'
+import { useChat } from '@ai-sdk/react'
+import { DefaultChatTransport } from 'ai'
+
+const convexSiteUrl = process.env.NEXT_PUBLIC_CONVEX_URL?.replace(/.cloud$/, '.site')
 
 export function AIChatButton() {
   const [chatOpen, setChatOpen] = useState(false)
@@ -26,9 +31,29 @@ interface AIChatBoxProps {
 }
 
 function AIChatBox({ open, onClose }: AIChatBoxProps) {
+  const [input, setInput] = useState('')
+
   const [isExpanded, setIsExpanded] = useState(false)
 
+  const token = useAuthToken()
+
+  const { messages, sendMessage } = useChat({
+    transport: new DefaultChatTransport({
+      api: `${convexSiteUrl}/api/chat`,
+      headers: { Authorization: `Bearer ${token}` },
+    }),
+  })
+
   const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  function onSubmit(e: React.FormEvent) {
+    e.preventDefault()
+
+    if (input.trim()) {
+      sendMessage({ text: input })
+      setInput('')
+    }
+  }
 
   if (!open) return null
 
@@ -75,12 +100,16 @@ function AIChatBox({ open, onClose }: AIChatBoxProps) {
       </div>
 
       <div className="flex-1 space-y-4 overflow-y-auto p-3">
-        {/* TODO: Render messages here */}
+        {messages.map((message) => (
+          <p key={message.id}>{JSON.stringify(message)}</p>
+        ))}
         <div ref={messagesEndRef} />
       </div>
 
-      <form className="flex gap-2 border-t p-3">
+      <form className="flex gap-2 border-t p-3" onSubmit={onSubmit}>
         <Textarea
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
           placeholder="Type your message..."
           className="max-h-[120px] min-h-[40px] resize-none overflow-y-auto"
           maxLength={1000}
@@ -93,6 +122,8 @@ function AIChatBox({ open, onClose }: AIChatBoxProps) {
     </div>
   )
 }
+
+// TODO: ChatMessage
 
 function Loader() {
   return (
