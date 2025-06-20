@@ -5,9 +5,10 @@ import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
 import { useAuthToken } from '@convex-dev/auth/react'
 import { Bot, Expand, Minimize, Send, Trash, X } from 'lucide-react'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useChat } from '@ai-sdk/react'
-import { DefaultChatTransport } from 'ai'
+import { DefaultChatTransport, UIMessage } from 'ai'
+import Markdown from '@/components/markdown'
 
 const convexSiteUrl = process.env.NEXT_PUBLIC_CONVEX_URL?.replace(/.cloud$/, '.site')
 
@@ -30,6 +31,16 @@ interface AIChatBoxProps {
   onClose: () => void
 }
 
+const initialMessages: UIMessage[] = [
+  {
+    id: 'welcome-message',
+    role: 'assistant',
+    parts: [
+      { type: 'text', text: "I'm your notes assistant. I can find and summarize any information that you have saved." },
+    ],
+  },
+]
+
 function AIChatBox({ open, onClose }: AIChatBoxProps) {
   const [input, setInput] = useState('')
 
@@ -37,25 +48,42 @@ function AIChatBox({ open, onClose }: AIChatBoxProps) {
 
   const token = useAuthToken()
 
-  const { messages, sendMessage } = useChat({
+  const { messages, sendMessage, setMessages, status } = useChat({
     transport: new DefaultChatTransport({
       api: `${convexSiteUrl}/api/chat`,
       headers: { Authorization: `Bearer ${token}` },
     }),
+    messages: initialMessages,
   })
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
+  const isProcessing = status === 'submitted' || status === 'streaming'
+
+  useEffect(() => {
+    if (open) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [open, messages])
+
   function onSubmit(e: React.FormEvent) {
     e.preventDefault()
 
-    if (input.trim()) {
+    if (input.trim() && !isProcessing) {
       sendMessage({ text: input })
       setInput('')
     }
   }
 
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      onSubmit(e)
+    }
+  }
+
   if (!open) return null
+
+  const lastMessageIsUser = messages[messages.length - 1].role === 'user'
 
   return (
     <div
@@ -82,9 +110,10 @@ function AIChatBox({ open, onClose }: AIChatBoxProps) {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => {}}
+            onClick={() => setMessages(initialMessages)}
             className="text-primary-foreground hover:bg-primary/90 h-8 w-8"
             title="Clear chat"
+            disabled={isProcessing}
           >
             <Trash />
           </Button>
@@ -101,8 +130,10 @@ function AIChatBox({ open, onClose }: AIChatBoxProps) {
 
       <div className="flex-1 space-y-4 overflow-y-auto p-3">
         {messages.map((message) => (
-          <p key={message.id}>{JSON.stringify(message)}</p>
+          <ChatMessage key={message.id} message={message} />
         ))}
+        {status === 'submitted' && lastMessageIsUser && <Loader />}
+        {status === 'error' && <ErrorMessage />}
         <div ref={messagesEndRef} />
       </div>
 
@@ -110,12 +141,13 @@ function AIChatBox({ open, onClose }: AIChatBoxProps) {
         <Textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
           placeholder="Type your message..."
           className="max-h-[120px] min-h-[40px] resize-none overflow-y-auto"
           maxLength={1000}
           autoFocus
         />
-        <Button type="submit" size="icon">
+        <Button type="submit" size="icon" disabled={!input.trim() || isProcessing}>
           <Send className="size-4" />
         </Button>
       </form>
@@ -123,7 +155,38 @@ function AIChatBox({ open, onClose }: AIChatBoxProps) {
   )
 }
 
-// TODO: ChatMessage
+interface ChatMessageProps {
+  message: UIMessage
+}
+
+function ChatMessage({ message }: ChatMessageProps) {
+  const currentStep = message.parts[message.parts.length - 1]
+
+  return (
+    <div
+      className={cn(
+        'mb-2 flex max-w-[80%] flex-col prose dark:prose-invert',
+        message.role === 'user' ? 'ml-auto items-end' : 'mr-auto items-start',
+      )}
+    >
+      <div
+        className={cn(
+          'prose dark:prose-invert rounded-lg px-3 py-2 text-sm',
+          message.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted first:prose-p:mt-0',
+        )}
+      >
+        {message.role === 'assistant' && (
+          <div className="text-muted-foreground mb-1 flex items-center gap-1 text-xs font-medium">
+            <Bot className="text-primary size-3" />
+            AI Assistant
+          </div>
+        )}
+        {currentStep?.type === 'text' && <Markdown>{currentStep.text}</Markdown>}
+        {currentStep.type === 'tool-invocation' && <div className="italic animate-pulse">Searching notes...</div>}
+      </div>
+    </div>
+  )
+}
 
 function Loader() {
   return (
@@ -133,4 +196,8 @@ function Loader() {
       <div className="bg-primary size-1.5 animate-pulse rounded-full delay-300" />
     </div>
   )
+}
+
+function ErrorMessage() {
+  return <div className="text-sm text-red-500">Something went wrong. Please try again.</div>
 }
