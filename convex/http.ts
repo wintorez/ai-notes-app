@@ -28,12 +28,14 @@ http.route({
 
     const result = streamText({
       model: openai('gpt-3.5-turbo'),
-      system: `You are a helpful assistant that can search through the user's notes.
+      system: `
+      You are a helpful assistant that can search through the user's notes.
       Use the information from the notes to answer questions and provide insights.
       If the requested information is not available, respond with "Sorry, I can't find that information in your notes".
       You can use markdown formatting like links, bullet points, numbered lists, and bold text.
       Provide links to relevant notes using this relative URL structure (omit the base URL): '/notes?noteId=<note-id>'.
-      Keep your responses concise and to the point.`,
+      Keep your responses concise and to the point.
+      `,
       messages: convertToModelMessages(lastMessages),
       tools: {
         findRelevantNotes: tool({
