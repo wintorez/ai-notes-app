@@ -10,7 +10,10 @@ import { useChat } from '@ai-sdk/react'
 import { DefaultChatTransport, UIMessage } from 'ai'
 import Markdown from '@/components/markdown'
 
-const convexSiteUrl = process.env.NEXT_PUBLIC_CONVEX_URL?.replace(/.cloud$/, '.site')
+const convexSiteUrl = process.env.NEXT_PUBLIC_CONVEX_URL?.replace(
+  /.cloud$/,
+  '.site',
+)
 
 export function AIChatButton() {
   const [chatOpen, setChatOpen] = useState(false)
@@ -57,6 +60,7 @@ function AIChatBox({ open, onClose }: AIChatBoxProps) {
       headers: { Authorization: `Bearer ${token}` },
     }),
     messages: initialMessages,
+    maxSteps: 3,
   })
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -92,7 +96,9 @@ function AIChatBox({ open, onClose }: AIChatBoxProps) {
     <div
       className={cn(
         'animate-in slide-in-from-bottom-10 bg-card fixed right-4 bottom-4 z-50 flex flex-col rounded-lg border shadow-lg duration-300 2xl:right-16',
-        isExpanded ? 'h-[650px] max-h-[90vh] w-[550px]' : 'h-[500px] max-h-[80vh] w-80 sm:w-96',
+        isExpanded
+          ? 'h-[650px] max-h-[90vh] w-[550px]'
+          : 'h-[500px] max-h-[80vh] w-80 sm:w-96',
       )}
     >
       <div className="bg-primary text-primary-foreground flex items-center justify-between rounded-t-lg border-b p-3">
@@ -150,7 +156,11 @@ function AIChatBox({ open, onClose }: AIChatBoxProps) {
           maxLength={1000}
           autoFocus
         />
-        <Button type="submit" size="icon" disabled={!input.trim() || isProcessing}>
+        <Button
+          type="submit"
+          size="icon"
+          disabled={!input.trim() || isProcessing}
+        >
           <Send className="size-4" />
         </Button>
       </form>
@@ -175,7 +185,9 @@ function ChatMessage({ message }: ChatMessageProps) {
       <div
         className={cn(
           'prose dark:prose-invert rounded-lg px-3 py-2 text-sm',
-          message.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted first:prose-p:mt-0',
+          message.role === 'user'
+            ? 'bg-primary text-primary-foreground'
+            : 'bg-muted first:prose-p:mt-0',
         )}
       >
         {message.role === 'assistant' && (
@@ -184,8 +196,12 @@ function ChatMessage({ message }: ChatMessageProps) {
             AI Assistant
           </div>
         )}
-        {currentStep?.type === 'text' && <Markdown>{currentStep.text}</Markdown>}
-        {currentStep.type === 'tool-invocation' && <div className="italic animate-pulse">Searching notes...</div>}
+        {currentStep?.type === 'text' && (
+          <Markdown>{currentStep.text}</Markdown>
+        )}
+        {currentStep.type === 'tool-invocation' && (
+          <div className="italic animate-pulse">Searching notes...</div>
+        )}
       </div>
     </div>
   )
@@ -202,5 +218,9 @@ function Loader() {
 }
 
 function ErrorMessage() {
-  return <div className="text-sm text-red-500">Something went wrong. Please try again.</div>
+  return (
+    <div className="text-sm text-red-500">
+      Something went wrong. Please try again.
+    </div>
+  )
 }
