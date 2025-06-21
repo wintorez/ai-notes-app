@@ -36,7 +36,10 @@ const initialMessages: UIMessage[] = [
     id: 'welcome-message',
     role: 'assistant',
     parts: [
-      { type: 'text', text: "I'm your notes assistant. I can find and summarize any information that you have saved." },
+      {
+        type: 'text',
+        text: "I'm your notes assistant. I can find and summarize any information that you have saved.",
+      },
     ],
   },
 ]

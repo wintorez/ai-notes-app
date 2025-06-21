@@ -14,11 +14,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Plus } from 'lucide-react'
-import { useMutation } from 'convex/react'
+import { useAction } from 'convex/react'
 import { api } from '../../../../convex/_generated/api'
 import { toast } from 'sonner'
 
@@ -51,7 +58,7 @@ interface CreateNoteDialogProps {
 }
 
 function CreateNoteDialog({ open, onOpenChange }: CreateNoteDialogProps) {
-  const createNote = useMutation(api.notes.createNote)
+  const createNote = useAction(api.notesActions.createNote)
 
   const form = useForm<z.infer<typeof noteFormSchema>>({
     resolver: zodResolver(noteFormSchema),
@@ -81,7 +88,8 @@ function CreateNoteDialog({ open, onOpenChange }: CreateNoteDialogProps) {
         <DialogHeader>
           <DialogTitle>Create New Note</DialogTitle>
           <DialogDescription>
-            Fill in the details for your new note. Click save when you&apos;re done.
+            Fill in the details for your new note. Click save when you&apos;re
+            done.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
